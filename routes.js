@@ -1,5 +1,5 @@
 const  request = require('request')
-
+const axios = require('axios')
 const routes = require('express').Router()
 
 routes.post('/subscribe', (req, res) => {
@@ -32,8 +32,21 @@ routes.post('/subscribe', (req, res) => {
 
         if(js) return res.sendStatus(200)
 
-        return res.redirect('/success.html')
+        return res.render('success')
     })
+})
+
+routes.post('/retrivie-password', (req, res) => {
+    const {password} = req.body
+    const {t} = req.query
+   
+    axios.post('http://localhost:81/v1/user/redefine-password', {token: t,
+    password: Buffer.from(password).toString('base64')}).then(response => {
+        res.json('success')
+    }).catch(err => {
+        console.log(err)
+    })
+    
 })
 
 routes.get('/', (req, res) => {
